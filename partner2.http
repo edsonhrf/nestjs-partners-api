@@ -1,0 +1,89 @@
+// ***** EVENTS ENDPOINTS *****
+
+GET http://localhost:3001/eventos
+
+###
+# @name criarEvento
+POST http://localhost:3001/eventos
+Content-Type: application/json
+
+{
+    "nome": "Novo Evento",
+    "descricao": "Este é um novo evento do partner 2",
+    "data": "2017-01-01T00:00:00",
+    "preco": 100
+}
+
+###
+@eventoId = {{ criarEvento.response.body.id }}
+
+###
+GET http://localhost:3001/eventos/{{eventoId}}
+
+###
+PATCH http://localhost:3001/eventos/{{eventoId}}
+Content-Type: application/json
+
+{
+    "nome": "Atualizacao do Evento",
+    "descricao": "Esta é uma atualizacao do evento do partner 2",
+    "data": "2017-01-01T00:00:00",
+    "preco": 200
+}
+
+###
+DELETE http://localhost:3001/eventos/{{eventoId}}
+
+//Excludes all events and the relations with other entities
+###
+DELETE http://localhost:3001/eventos
+
+// ------------------------------------------------------------------------------------- //
+
+// ***** SPOTS ENDPOINTS *****
+
+###
+GET http://localhost:3001/eventos/{{eventoId}}/lugares
+
+###
+# @name criarLugar
+POST http://localhost:3001/eventos/{{eventoId}}/lugares
+Content-Type: application/json
+
+{
+    "nome": "Lugar A5"
+}
+
+###
+@nomeLugar = {{ criarLugar.response.body.name }}
+
+###
+GET http://localhost:3001/eventos/{{eventoId}}/lugares/{{nomeLugar}}
+
+###
+PATCH http://localhost:3001/eventos/{{eventoId}}/lugares/{{nomeLugar}}
+Content-Type: application/json
+
+{
+    "name": "Spot Updated"
+}
+
+###
+DELETE http://localhost:3001/eventos/{{eventoId}}/lugares/{{nomeLugar}}
+
+
+// ------------------------------------------------------------------------------------- //
+
+// ***** SPOTS ENDPOINTS *****
+
+###
+POST http://localhost:3001/eventos/{{eventoId}}/reservar
+Content-Type: application/json
+X-Api-Token: 000
+
+{
+    "lugares": ["{{ nomeLugar }}"],
+    "tipo_ingresso": "inteira",
+    "email": "test@test.com"
+}
+
